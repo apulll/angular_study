@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>angular 指令学习</title>
+	<!-- <link rel="stylesheet" type="text/css" href="css/g.css"> -->
+	<script type="text/javascript" src="lib/angular-1.3.10/angular.js"></script>
+</head>
+<body>
+	<div class="header">
+		<p class="logo"><a href='/'>angular example</a></p>
+	</div>
+	<div ng-app="myApp" ng-controller="MainCtrl">
+	  <input type="text" ng-model="color" placeholder="Enter a color"/>
+	  <a href="<%href%>"><%color%></a>
+	  <div hello-world>
+
+	  </div>
+	</div>
+	<script>
+		var app = angular.module("myApp",[],function($interpolateProvider){
+			 $interpolateProvider.startSymbol('<%');
+	    	$interpolateProvider.endSymbol('%>');
+		});
+		app.controller('MainCtrl', ['$scope', function ($scope) {
+			$scope.name = "表达式标签更换为<% %>",
+			$scope.href = "http://www.baidu.com",
+			$scope.color = "#e5958421"
+		}]);
+		app.directive('helloWorld', function () {
+			return {
+				restrict: 'AE',
+				scope:{
+					 color: '='
+				},
+				replace:true,
+				template:'<p style="background-color:<%color%>">Hello World</p>',
+				link: function (scope, elem, attr) {
+					elem.bind('click',function(){
+						elem.css('background-color', '#fff');
+						scope.$apply(function(){
+							scope.color="#000";
+						})
+
+					})
+					elem.bind('mouseover', function(event) {
+						/* Act on the event */
+						elem.css('cursor',"pointer");
+					});
+				}
+			};
+		})
+	</script>
+</body>
+</html>
